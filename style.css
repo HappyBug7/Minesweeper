@@ -1,0 +1,45 @@
+.container{
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  margin: auto;
+}
+#maindiv{
+  background-color: rgb(195, 207, 203);
+  margin: auto;
+  display: flex;
+  flex-direction: column;
+}
+.cell{
+  background-color: rgb(60, 60, 60);
+  width: 20px;
+  height: 20px;
+  margin: 3px;
+  display: flex;
+  align-items: center;
+}
+.cell:hover{
+  background-color: rgb(255, 255, 255);
+}
+.cellclicked{
+  width: 20px;
+  height: 20px;
+  margin: 3px;
+  background-color: rgb(255, 255, 255);
+}
+.cellbomb{
+  width: 20px;
+  height: 20px;
+  margin: 3px;
+  background-color: rgb(255, 0, 0);
+}
+.row{
+  display: flex;
+  flex-direction: row;
+}
+.cellflaged{
+  width: 20px;
+  height: 20px;
+  margin: 3px;
+  background-color: rgb(255, 183, 183);
+}
