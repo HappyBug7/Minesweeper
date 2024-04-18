@@ -8,12 +8,19 @@
 </head>
 <body>
   <div class="container">
-    <div id="header">
-      <h1>Minesweeper</h1>
-      <button id="reset" onclick="reset()">Reset</button>
+    <div class="game">
+      <div id="header">
+        <h1>Minesweeper</h1>
+        <button id="reset" onclick="reset()">Reset</button>
+      </div>
+      <div id="maindiv">
+        <div id="board"></div>
+      </div>
     </div>
-    <div id="maindiv">
-      <div id="board"></div>
+    <div class="record">
+      <p id="timer"></p>
+      <h1>历史记录：</h1>
+        <ul id="records"></ul>
     </div>
   </div>
   <script src="./minesweeper.js"></script>

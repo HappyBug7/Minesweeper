@@ -1,8 +1,26 @@
 .container{
-  display: flex;
+  /*display: flex;
   flex-direction: row;
-  align-items: center;
+  justify-content: center;
+  align-items: center;*/
+  display: grid;
+  grid-template-columns: 1fr 1fr;
   margin: auto;
+  width: 100%;
+  height: 100%;
+}
+.game {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+#header {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 50px;
 }
 #maindiv{
   background-color: rgb(195, 207, 203);
