@@ -11,16 +11,17 @@ function __init__(){
         click(this);
       });
       cell.addEventListener('contextmenu', function(event) {
-        flage(this);
+        flag(this);
         event.preventDefault(); 
         });
       row.appendChild(cell);
     }
     dom.appendChild(row);
   }
+  set();
 }
 
-function flage(cell){
+function flag(cell){
   var id = cell.id.split("-");
   var i = parseInt(id[0]);
   var j = parseInt(id[1]);
@@ -29,33 +30,21 @@ function flage(cell){
     cell.innerHTML = "";
     if(mines[i][j] == 1){
       fcnt--;
+    }else{
+      err --;
     }
   } else {
     cell.className = "cellflaged";
     cell.innerHTML = "F";
     if(mines[i][j] == 1){
       fcnt++;
+    }else{
+      err ++;
     }
-    if (fcnt == 10) {
+    if (fcnt == 10 && err == 0) {
       alert("You Win!");
       stopTimer();
       recordTime();
-    }
-  }
-}
-
-function doubleClick(cell){
-  if(cell.className != "cellclicked"){
-    return
-  }
-  var id = cell.id.split("-");
-  var i = parseInt(id[0]);
-  var j = parseInt(id[1]);
-  for(var x = i - 1; x <= i + 1; x++){
-    for(var y = j - 1; y <= j + 1; y++){
-      if(x >= 0 && x < 10 && y >= 0 && y < 10){
-        document.getElementById(x + "-" + y).click();
-      }
     }
   }
 }
@@ -104,6 +93,55 @@ function dfs(x,y){
       if(matrix[x][i] != -1){
         document.getElementById(x + "-" + i).click();
       }
+    }
+  }
+}
+
+function set(){
+  for (var i = 0; i < 10; i++) {
+    mines[i] = [];
+    for (var j = 0; j < 10; j++) {
+      mines[i][j] = 0;
+    }
+  }
+  num = 0
+  for (;num < 10;) {
+    var x = Math.floor(Math.random() * 10);
+    var y = Math.floor(Math.random() * 10);
+    if (mines[x][y] == 1) {
+      continue;
+    }
+    mines[x][y] = 1;
+    num++;
+  }
+  for (var i = 0; i < 10; i++) {
+    matrix[i] = [];
+    for (var j = 0; j < 10; j++) {
+      matrix[i][j] = 0;
+    }
+  }
+  var count = 0;
+  for (var i = 0; i < 10; i++) {
+    for (var j = 0; j < 10; j++) {
+      if(mines[i][j] == 1){
+        matrix[i][j] = -1;
+        continue;
+      }
+      count = 0;
+      for (var x = i - 1; x <= i + 1; x++) {
+        for (var y = j - 1; y <= j + 1; y++) {
+          if (x >= 0 && x < 10 && y >= 0 && y < 10) {
+            count += mines[x][y];
+          }
+        }
+      }
+      matrix[i][j] = count;
+    }
+  }
+  for (var i = 0; i < 10; i++) {
+    clicked[i] = [];
+    for (var j = 0; j < 10; j++) {
+      clicked[i][j] = 0;
     }
   }
 }
@@ -219,7 +257,7 @@ function test(){
   for(i = 0; i < 10; i++){
     for(j = 0; j < 10; j++){
       if(mines[i][j] == 1){
-        flage(document.getElementById(i + "-" + j));
+        flag(document.getElementById(i + "-" + j));
       }else{
         click(document.getElementById(i + "-" + j));
       }
@@ -230,64 +268,15 @@ function test(){
 let startTime;
 let timerInterval;
 let records = [];
-let sortedrecords = [];
 
 const timerDisplay = document.getElementById('timer');
 const recordsList = document.getElementById('records');
 
 var mines = [];
-for (var i = 0; i < 10; i++) {
-  mines[i] = [];
-  for (var j = 0; j < 10; j++) {
-    mines[i][j] = 0;
-  }
-}
-num = 0
-for (;num < 10;) {
-  var x = Math.floor(Math.random() * 10);
-  var y = Math.floor(Math.random() * 10);
-  if (mines[x][y] == 1) {
-    continue;
-  }
-  mines[x][y] = 1;
-  num++;
-}
-
 var matrix = [];
-for (var i = 0; i < 10; i++) {
-  matrix[i] = [];
-  for (var j = 0; j < 10; j++) {
-    matrix[i][j] = 0;
-  }
-}
-var count = 0;
-for (var i = 0; i < 10; i++) {
-  for (var j = 0; j < 10; j++) {
-    if(mines[i][j] == 1){
-      matrix[i][j] = -1;
-      continue;
-    }
-    count = 0;
-    for (var x = i - 1; x <= i + 1; x++) {
-      for (var y = j - 1; y <= j + 1; y++) {
-        if (x >= 0 && x < 10 && y >= 0 && y < 10) {
-          count += mines[x][y];
-        }
-      }
-    }
-    matrix[i][j] = count;
-  }
-}
-
 var clicked = [];
-for (var i = 0; i < 10; i++) {
-  clicked[i] = [];
-  for (var j = 0; j < 10; j++) {
-    clicked[i][j] = 0;
-  }
-}
-
 fcnt = 0;
+err = 0;
 isStart = false;
 
 __init__();
