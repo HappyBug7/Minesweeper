@@ -120,10 +120,6 @@ function reset(){
   isStart = false;
   stopTimer();
   timerDisplay.textContent = '00:00.000';
-  records = [];
-  while (recordsList.firstChild) {
-    recordsList.removeChild(recordsList.firstChild);
-  }
   fcnt = 0;
   for (var i = 0; i < 10; i++) {
     mines[i] = [];
@@ -188,15 +184,53 @@ function updateTimer() {
 
 function recordTime() {
     records.push(timerDisplay.textContent);
-    const newRecordItem = document.createElement('li');
-    newRecordItem.textContent = timerDisplay.textContent;
-    recordsList.appendChild(newRecordItem);
+    updateRecords(records);
 }
 
+function sort(){
+  let record = [];
+  copy(record, records);
+  choose = document.getElementById("sort").value;
+  if(choose == "time"){
+    record.sort();
+  }
+  updateRecords(record);
+}
+
+function updateRecords(list){
+  while (recordsList.firstChild) {
+    recordsList.removeChild(recordsList.firstChild);
+  }
+  for (var i = 0; i < list.length; i++) {
+    const newRecordItem = document.createElement('li');
+    newRecordItem.textContent = list[i];
+    recordsList.appendChild(newRecordItem);
+  }
+
+}
+
+function copy(copylist, orilist){
+  for(var i = 0; i < orilist.length; i++){
+    copylist.push(orilist[i]);
+  }
+}
+
+function test(){
+  for(i = 0; i < 10; i++){
+    for(j = 0; j < 10; j++){
+      if(mines[i][j] == 1){
+        flage(document.getElementById(i + "-" + j));
+      }else{
+        click(document.getElementById(i + "-" + j));
+      }
+    }
+  }
+}
 
 let startTime;
 let timerInterval;
 let records = [];
+let sortedrecords = [];
 
 const timerDisplay = document.getElementById('timer');
 const recordsList = document.getElementById('records');

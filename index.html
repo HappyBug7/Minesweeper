@@ -12,6 +12,7 @@
       <div id="header">
         <h1>Minesweeper</h1>
         <button id="reset" onclick="reset()">Reset</button>
+        <button id="test" onclick="test()" style="margin: 5px;">Test</button>
       </div>
       <div id="maindiv">
         <div id="board"></div>
@@ -20,6 +21,11 @@
     <div class="record">
       <p id="timer"></p>
       <h1>历史记录：</h1>
+      <label for="sort">sorted by</label>
+      <select id="sort" onchange="sort()">
+        <option value="default">default</option>
+        <option value="time">time</option>
+      </select>
         <ul id="records"></ul>
     </div>
   </div>
