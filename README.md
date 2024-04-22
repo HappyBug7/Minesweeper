@@ -12,17 +12,17 @@
 
 对于每一个格子, 其数字代表周围3x3九宫格范围内雷的数量, 对于周围没有雷的格子, 我们以空格代替原有的0
 
-![image-20240422110009338](C:\Users\fubow\AppData\Roaming\Typora\typora-user-images\image-20240422110009338.png)
+![image-20240422110009338](./assets/image-20240422110009338.png)
 
 对于未打开的格子, 玩家可以右键点击来在其上插旗, 以标记雷, 当所有的雷都被旗子标记且旗子的数量等于雷的数量时, 游戏胜利 
 
-![image-20240422110040388](C:\Users\fubow\AppData\Roaming\Typora\typora-user-images\image-20240422110040388.png)
+![image-20240422110040388](./assets/image-20240422110040388.png)
 
 ***
 
 ### 界面设计
 
-![image-20240422110348099](C:\Users\fubow\AppData\Roaming\Typora\typora-user-images\image-20240422110348099.png)
+![image-20240422110348099](./assets/image-20240422110348099.png)
 
 整个页面分为4个部分, 名称, 游戏主体, 计时部分以及历史记录
 
