@@ -1,10 +1,34 @@
-function __init__(){
-  dom = document.getElementById("maindiv");
-  for (var i = 0; i < 10; i++) {
-    var row = document.createElement("div");
+let startTime;
+let timerInterval;
+let records = [];
+const timerDisplay = document.getElementById('timer');
+const recordsList = document.getElementById('records');
+mineNum = 10;
+
+let mines = [];
+let matrix = [];
+let clicked = [];
+let fcnt = 0;
+let err = 0;
+let isStart = false;
+
+function initialize() {
+  const dom = document.getElementById("maindiv");
+  difficulty = document.getElementById("difficulty-choose").value;
+  if (difficulty == "easy") {
+    mineNum = 10;
+  }
+  if (difficulty == "medium") {
+    mineNum = 15;
+  }
+  if (difficulty == "hard") {
+    mineNum = 20;
+  }
+  for (let i = 0; i < mineNum; i++) {
+    const row = document.createElement("div");
     row.className = "row";
-    for (var j = 0; j < 10; j++) {
-      var cell = document.createElement("div");
+    for (let j = 0; j < mineNum; j++) {
+      const cell = document.createElement("div");
       cell.className = "cell";
       cell.id = i + "-" + j;
       cell.addEventListener('click', function() {
@@ -13,35 +37,35 @@ function __init__(){
       cell.addEventListener('contextmenu', function(event) {
         flag(this);
         event.preventDefault(); 
-        });
+      });
       row.appendChild(cell);
     }
     dom.appendChild(row);
   }
-  set();
+  setMines();
 }
 
-function flag(cell){
-  var id = cell.id.split("-");
-  var i = parseInt(id[0]);
-  var j = parseInt(id[1]);
+function flag(cell) {
+  const id = cell.id.split("-");
+  const i = parseInt(id[0]);
+  const j = parseInt(id[1]);
   if (cell.className == "cellflaged") {
     cell.className = "cell";
     cell.innerHTML = "";
-    if(mines[i][j] == 1){
+    if (mines[i][j] == 1) {
       fcnt--;
-    }else{
-      err --;
+    } else {
+      err--;
     }
   } else {
     cell.className = "cellflaged";
     cell.innerHTML = "F";
-    if(mines[i][j] == 1){
+    if (mines[i][j] == 1) {
       fcnt++;
-    }else{
-      err ++;
+    } else {
+      err++;
     }
-    if (fcnt == 10 && err == 0) {
+    if (fcnt == mineNum && err == 0) {
       alert("You Win!");
       stopTimer();
       recordTime();
@@ -49,10 +73,10 @@ function flag(cell){
   }
 }
 
-function click(cell){
-  var id = cell.id.split("-");
-  var i = parseInt(id[0]);
-  var j = parseInt(id[1]);
+function click(cell) {
+  const id = cell.id.split("-");
+  const i = parseInt(id[0]);
+  const j = parseInt(id[1]);
   cell.className = "cellclicked";
   clicked[i][j] = 1;
   if (!isStart) {
@@ -64,73 +88,65 @@ function click(cell){
     alert("Game Over!");
     reset();
   } else {
-    count = matrix[i][j];
-    if(count == 0){
+    let count = matrix[i][j];
+    if (count == 0) {
       dfs(i, j);
       cell.innerHTML = " ";
-      return
+      return;
     }
     cell.innerHTML = count;
   }
 }
 
-function dfs(x,y){
-  for (var i = x-1; i <= x+1; i++) {
-    if(i<0 || i>=10){
+function dfs(x, y) {
+  for (let i = x - 1; i <= x + 1; i++) {
+    if (i < 0 || i >= mineNum) {
       continue;
     }
-    if (clicked[i][y] != 1){
-      if(matrix[i][y] != -1){
+    if (clicked[i][y] != 1) {
+      if (matrix[i][y] != -1) {
         document.getElementById(i + "-" + y).click();
       }
     }
   }
-  for (var i = y-1; i <= y+1; i++){
-    if(i<0 || i>=10){
+  for (let i = y - 1; i <= y + 1; i++) {
+    if (i < 0 || i >= mineNum) {
       continue;
     }
-    if (clicked[x][i] != 1){
-      if(matrix[x][i] != -1){
+    if (clicked[x][i] != 1) {
+      if (matrix[x][i] != -1) {
         document.getElementById(x + "-" + i).click();
       }
     }
   }
 }
 
-function set(){
-  for (var i = 0; i < 10; i++) {
-    mines[i] = [];
-    for (var j = 0; j < 10; j++) {
-      mines[i][j] = 0;
-    }
+function setMines() {
+  for (let i = 0; i < mineNum; i++) {
+    mines[i] = Array(mineNum).fill(0);
+    matrix[i] = Array(mineNum).fill(0);
+    clicked[i] = Array(mineNum).fill(0);
   }
-  num = 0
-  for (;num < 10;) {
-    var x = Math.floor(Math.random() * 10);
-    var y = Math.floor(Math.random() * 10);
+  let num = 0;
+  for (; num < mineNum;) {
+    const x = Math.floor(Math.random() * mineNum);
+    const y = Math.floor(Math.random() * mineNum);
     if (mines[x][y] == 1) {
       continue;
     }
     mines[x][y] = 1;
     num++;
   }
-  for (var i = 0; i < 10; i++) {
-    matrix[i] = [];
-    for (var j = 0; j < 10; j++) {
-      matrix[i][j] = 0;
-    }
-  }
-  var count = 0;
-  for (var i = 0; i < 10; i++) {
-    for (var j = 0; j < 10; j++) {
-      if(mines[i][j] == 1){
+  for (let i = 0; i < mineNum; i++) {
+    for (let j = 0; j < mineNum; j++) {
+      if (mines[i][j] == 1) {
         matrix[i][j] = -1;
         continue;
       }
-      count = 0;
-      for (var x = i - 1; x <= i + 1; x++) {
-        for (var y = j - 1; y <= j + 1; y++) {
-          if (x >= 0 && x < 10 && y >= 0 && y < 10) {
+      let count = 0;
+      for (let x = i - 1; x <= i + 1; x++) {
+        for (let y = j - 1; y <= j + 1; y++) {
+          if (x >= 0 && x < mineNum && y >= 0 && y < mineNum) {
             count += mines[x][y];
           }
         }
@@ -138,18 +154,12 @@ function set(){
       matrix[i][j] = count;
     }
   }
-  for (var i = 0; i < 10; i++) {
-    clicked[i] = [];
-    for (var j = 0; j < 10; j++) {
-      clicked[i][j] = 0;
-    }
-  }
 }
 
-function reset(){
-  for (var i = 0; i < 10; i++) {
-    for (var j = 0; j < 10; j++) {
-      var cell = document.getElementById(i + "-" + j);
+function reset() {
+  for (let i = 0; i < mineNum; i++) {
+    for (let j = 0; j < mineNum; j++) {
+      const cell = document.getElementById(i + "-" + j);
       cell.className = "cell";
       cell.innerHTML = "";
       clicked[i][j] = 0;
@@ -159,47 +169,8 @@ function reset(){
   stopTimer();
   timerDisplay.textContent = '00:00.000';
   fcnt = 0;
-  for (var i = 0; i < 10; i++) {
-    mines[i] = [];
-    for (var j = 0; j < 10; j++) {
-      mines[i][j] = 0;
-    }
-  }
-  num = 0;
-  for (;num < 10;) {
-    var x = Math.floor(Math.random() * 10);
-    var y = Math.floor(Math.random() * 10);
-    if (mines[x][y] == 1) {
-      continue;
-    }
-    mines[x][y] = 1;
-    num++;
-  }
-  matrix = [];
-  for (var i = 0; i < 10; i++) {
-    matrix[i] = [];
-    for (var j = 0; j < 10; j++) {
-      matrix[i][j] = 0;
-    }
-  }
-  count = 0;
-  for (var i = 0; i < 10; i++) {
-    for (var j = 0; j < 10; j++) {
-      if(mines[i][j] == 1){
-        matrix[i][j] = -1;
-        continue;
-      }
-      count = 0;
-      for (var x = i - 1; x <= i + 1; x++) {
-        for (var y = j - 1; y <= j + 1; y++) {
-          if (x >= 0 && x < 10 && y >= 0 && y < 10) {
-            count += mines[x][y];
-          }
-        }
-      }
-      matrix[i][j] = count;
-    }
-  }
+  err = 0;
+  setMines();
 }
 
 function startTimer() {
@@ -244,7 +215,6 @@ function updateRecords(list){
     newRecordItem.textContent = list[i];
     recordsList.appendChild(newRecordItem);
   }
-
 }
 
 function copy(copylist, orilist){
@@ -254,8 +224,8 @@ function copy(copylist, orilist){
 }
 
 function test(){
-  for(i = 0; i < 10; i++){
-    for(j = 0; j < 10; j++){
+  for(i = 0; i < mineNum; i++){
+    for(j = 0; j < mineNum; j++){
       if(mines[i][j] == 1){
         flag(document.getElementById(i + "-" + j));
       }else{
@@ -265,21 +235,16 @@ function test(){
   }
 }
 
-let startTime;
-let timerInterval;
-let records = [];
-
-const timerDisplay = document.getElementById('timer');
-const recordsList = document.getElementById('records');
-
-var mines = [];
-var matrix = [];
-var clicked = [];
-fcnt = 0;
-err = 0;
-isStart = false;
-
-__init__();
+function difficultyUpdate() {
+  for (let i = 0; i < mineNum; i++) {
+    for (let j = 0; j < mineNum; j++) {
+      const cell = document.getElementById(i + "-" + j);
+      cell.parentNode.removeChild(cell);
+    }
+  }
+  initialize();
+}
+initialize();
 console.log(mines);
 console.log(matrix);
 

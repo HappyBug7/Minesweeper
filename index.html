@@ -11,6 +11,12 @@
     <div class="game">
       <div id="header">
         <h1>Minesweeper</h1>
+        <label for="difficuly-choose">Choose a difficulty:</label>
+        <select id="difficulty-choose" onchange="difficultyUpdate()">
+          <option value="easy">easy</option>
+          <option value="medium">medium</option>
+          <option value="hard">hard</option>
+        </select>
         <button id="reset" onclick="reset()">Reset</button>
         <button id="test" onclick="test()" style="margin: 5px;">Test</button>
       </div>
